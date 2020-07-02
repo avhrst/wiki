@@ -24,7 +24,27 @@ CONFIGURE SNAPSHOT CONTROLFILE NAME TO '/opt/oracle/product/18c/dbhomeXE/dbs/sna
 ### custom location 
 ```
 show all;
-CONFIGURE DEFAULT DEVICE TYPE TO DISK FORMAT '/mnt/backup/%U' maxpiecesize 8 G;
-configure controlfile autobackup format for device type disk to '/mnt/backup/%F';
-configure channel device type disk format '/mnt/backup/%U' maxpiecesize 8 G;
+
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK TO "/mnt/backup/rman/ctl_%F";
+CONFIGURE DATAFILE BACKUP COPIES FOR DEVICE TYPE DISK TO 1;
+CONFIGURE ARCHIVELOG BACKUP COPIES FOR DEVICE TYPE DISK TO 1;
+CONFIGURE CHANNEL DEVICE TYPE DISK FORMAT   "/mnt/backup/rman/full_%u_%s_%p";
+CONFIGURE MAXSETSIZE TO UNLIMITED;
+
+```
+
+###  backup
+
+```
+run
+{
+    BACKUP FULL DATABASE PLUS ARCHIVELOG;
+    delete noprompt archivelog all;
+    crosscheck backup;
+    DELETE NOPROMPT OBSOLETE RECOVERY WINDOW OF 7 DAYS;
+}
+```
+
+```
+rman target /  @backup.rmn log=full_back.log
 ```
