@@ -106,5 +106,14 @@ WantedBy=multi-user.target
 systemctl daemon-reload
 systemctl enable dbora.service
 ```
+### PDB Autostart
 
+```
+CREATE OR REPLACE TRIGGER open_pdbs 
+  AFTER STARTUP ON DATABASE 
+BEGIN 
+   EXECUTE IMMEDIATE 'ALTER PLUGGABLE DATABASE ALL OPEN'; 
+END open_pdbs;
+/
+```
 
