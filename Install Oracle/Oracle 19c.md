@@ -24,11 +24,11 @@ export ORACLE_SID=ORCLCDB
 export PDB_NAME=orclpdb1
 export DATA_DIR=/opt/oracle/oradata
 
-export PATH=/usr/sbin:/usr/local/bin:\$PATH
-export PATH=$ORACLE_HOME/bin:\$PATH
+export PATH=/usr/sbin:/usr/local/bin:$PATH
+export PATH=$ORACLE_HOME/bin:$PATH
 
 export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
-export CLASSPATH=$ORACLE_HOME/jlib:\$ORACLE_HOME/rdbms/jlib
+export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
 ```
 
 ```
