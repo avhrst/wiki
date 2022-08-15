@@ -233,6 +233,18 @@ sqlplus / as sysdba
 SQL> alter session set container = orclpdb1;
 SQL> @catpatch.sql
 ```
+
+## INTERNAL ADMIN
+
+```
+su - oracle
+cd /opt/oracle/apex
+sqlplus / as sysdba
+SQL> alter session set container = orclpdb1;
+SQL> @apxchpwd.sql
+```
+
+
 ## ORDS Installation
 
 ### JDK 17
@@ -346,6 +358,7 @@ export APEX_IMAGES=/opt/oracle/apex/images
 ${ORDS_HOME}/bin/ords --config ${ORDS_CONFIG} config set standalone.static.path ${APEX_IMAGES}
 ```
 
+## Ords Service
 
 ```
 vim /etc/systemd/system/ords.service
