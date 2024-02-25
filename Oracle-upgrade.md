@@ -227,6 +227,12 @@ alter session set container = pdb1;
 alter profile default limit PASSWORD_VERIFY_FUNCTION null;
 @apxsilentins.sql SYSAUX SYSAUX TEMP /i/ 31415926 31415926 31415926 31415926
 @apex_rest_config.sql
+
+alter user apex_listener identified by 31415926 account unlock;
+alter user apex_public_user identified by 31415926 account unlock;
+alter user apex_rest_public_user identified by 31415926 account unlock;
+alter user ords_public_user identified by 31415926 account unlock;
+
 exit;
 ```
 
