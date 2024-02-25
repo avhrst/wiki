@@ -1,4 +1,6 @@
 
+https://oracle-base.com/articles/19c/multitenant-upgrading-to-19c
+
 ## Preinstall step
 ```
 yum install -y oracle-database-preinstall-19c
