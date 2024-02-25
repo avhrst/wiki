@@ -47,3 +47,11 @@ run as root
 /u01/app/oracle/product/19.0.0/dbhome_1/root.sh
 ```
 
+## Upgrade
+
+```
+su - oracle
+export ORACLE_HOME=$ORACLE_BASE/product/19.0.0/dbhome_1
+```
+
+
