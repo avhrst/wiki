@@ -15,29 +15,9 @@ dnf install -y oracle-ai-database-preinstall-26ai
 
 Install packages
 ```
-yum upgrade -y
+vim /etc/sysconfig/selinux
+SELINUX=permissive
 
-mkdir -p /u01/download
-chmod 777 /u01/download/
-
-yum -y install perl perl-Net-SSLeay openssl perl-IO-Tty perl-Encode-Detect
-yum -y install libaio bc nano unzip mc
-locale
-mv /etc/localtime /etc/localtime.bkp
-cp /usr/share/zoneinfo/Europe/Kiev /etc/localtime
-yum install ntp -y
-chkconfig ntpd on
-service ntpd restart
-
-yum install mc net-tools.x86_64 htop iotop iftop unzip wget epel-release -y
-yum install rlwrap -y
-yum install vim -y
-systemctl start chronyd
-systemctl enable chronyd
-
-mcedit /etc/sysconfig/selinux
-
-setenforce 0
 systemctl disable firewalld
 systemctl stop firewalld
 
@@ -46,8 +26,6 @@ systemctl stop firewalld
 ## Install DB
 
 ```
-chown oracle.oinstall /opt/oracle
-
  wget https://download.oracle.com/otn-pub/otn_software/db-free/oracle-ai-database-free-26ai-23.26.0-1.el9.x86_64.rpm
 
   dnf -y localinstall oracle-ai-database-free-26ai-23.26.0-1.el9.x86_64.rpm
@@ -96,4 +74,83 @@ ALTER USER APEX_PUBLIC_USER ACCOUNT UNLOCK;
 @apxchpwd.sql
 ```
 
-Internal def password: Pi__31415926!
+# ORDS instalation
+
+## root user
+```
+wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.rpm
+dnf localinstall jdk-21_linux-x64_bin.rpm
+
+mkdir -p /opt/oracle/ords
+
+groupadd ords
+useradd -M -s /bin/bash -g ords -d /opt/oracle/ords ords
+
+wget https://download.oracle.com/otn_software/java/ords/ords-latest.zip
+
+unzip ords-*.zip -d /opt/oracle/ords
+chown ords -R /opt/oracle/ords
+
+cp -a /opt/oracle/apex/images/  /opt/oracle/ords
+chown -R ords:ords /opt/oracle/ords/images
+```
+
+## ords user
+```
+vim ~/.bash_profile
+
+export ORDS_CONFIG=/opt/oracle/ords
+PATH="$PATH:/opt/oracle/ords/bin"
+export PATH
+
+```
+
+```
+ords install
+```
+
+###  ORDS Services
+
+```
+vim /etc/systemd/system/ords.service
+```
+
+```
+[Unit]
+Description=Oracle REST Data Services
+Requires=network.target
+After=oracle-xe-21c.service
+
+[Service]
+Type=simple
+ExecStart=/opt/oracle/ords/bin/ords --config /opt/oracle/ords serve
+ExecStop=/bin/kill -HUP ${MAINPID}
+User=ords
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```
+systemctl daemon-reload
+systemctl start ords
+systemctl enable ords
+
+```
+
+
+
+### ORDS -https
+```
+openssl pkcs8 -topk8 -inform PEM -outform DER -in yourdomain.key -out yourdomain.der -nocrypt
+```
+config/ords/standalone/standalone.properties
+```
+jetty.secure.port=8443
+ssl.cert=/opt/oracle/ords/config/ords/ssl/<path to yourdomain.crt>
+ssl.cert.key=/opt/oracle/ords/config/ords/ssl/<path to yourdomain.der>
+ssl.host=yourdomain
+```
+
+
+
