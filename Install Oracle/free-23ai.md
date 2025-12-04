@@ -144,12 +144,20 @@ systemctl enable ords
 ```
 openssl pkcs8 -topk8 -inform PEM -outform DER -in yourdomain.key -out yourdomain.der -nocrypt
 ```
-config/ords/standalone/standalone.properties
+
 ```
-jetty.secure.port=8443
-ssl.cert=/opt/oracle/ords/config/ords/ssl/<path to yourdomain.crt>
-ssl.cert.key=/opt/oracle/ords/config/ords/ssl/<path to yourdomain.der>
-ssl.host=yourdomain
+export ORDS_CONFIG=/opt/oracle/ords/config   # adjust to your config dir
+
+# HTTPS port (equivalent to jetty.secure.port)
+ords --config "$ORDS_CONFIG" config set standalone.https.port 8443
+
+# Cert + key (equivalent to ssl.cert / ssl.cert.key)
+ords --config "$ORDS_CONFIG" config set standalone.https.cert     /opt/oracle/ords/config/ords/ssl/yourdomain.crt
+ords --config "$ORDS_CONFIG" config set standalone.https.cert.key /opt/oracle/ords/config/ords/ssl/yourdomain.key
+
+# HTTPS host (equivalent to ssl.host)
+ords --config "$ORDS_CONFIG" config set standalone.https.host yourdomain
+
 ```
 
 
