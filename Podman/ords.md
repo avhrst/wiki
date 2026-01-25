@@ -12,7 +12,7 @@ podman run -d \
   -e DBSERVICENAME=freepdb1 \
   -e ORACLE_PWD=oracle \
   -v ords_config_vol:/etc/ords/config:Z \
-  -v /home/oleksii/Code/oracle/apex/images:/etc/ords/static_files:Z \
+  -v /home/oleksii/Oracle/apex/images:/etc/ords/static_files:Z \
   container-registry.oracle.com/database/ords:latest
 
 
